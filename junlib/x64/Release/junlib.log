@@ -1,0 +1,34 @@
+﻿Build started 2016/8/3 10:40:19.
+     1>Project "D:\code\c\junlib\junlib\junlib.vcxproj" on node 2 (Build target(s)).
+     1>ClCompile:
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\x86_amd64\CL.exe /c /ID:\code\c\include /I. /Zi /nologo /W3 /WX- /sdl /O2 /Oi /GL /D WIN32 /D NDEBUG /D _CONSOLE /D _LIB /D _UNICODE /D UNICODE /Gm- /EHsc /MD /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Fo"x64\Release\\" /Fd"x64\Release\vc120.pdb" /Gd /TP /wd4819 /errorReport:prompt src\sample.cpp
+         sample.cpp
+     1>d:\code\c\junlib\junlib\je_new.h(8): warning C4290: C++ exception specification ignored except to indicate a function is not __declspec(nothrow)
+     1>d:\code\c\junlib\junlib\je_new.h(10): warning C4290: C++ exception specification ignored except to indicate a function is not __declspec(nothrow)
+       Link:
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\x86_amd64\link.exe /ERRORREPORT:PROMPT /OUT:"D:\code\c\junlib\x64\Release\junlib.exe" /INCREMENTAL:NO /NOLOGO /LIBPATH:D:\code\c\x64\lib jemalloc.lib opencv_ts300.lib opencv_world300.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"D:\code\c\junlib\x64\Release\junlib.pdb" /SUBSYSTEM:CONSOLE /OPT:REF /OPT:ICF /LTCG /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"D:\code\c\junlib\x64\Release\junlib.lib" /MACHINE:X64 /PROFILE x64\Release\AlignedBlob.obj
+         x64\Release\BBGrid.obj
+         x64\Release\BlobGrid.obj
+         x64\Release\BLOBNBOX.obj
+         x64\Release\DIR.obj
+         x64\Release\floodfill.obj
+         x64\Release\je_new.obj
+         x64\Release\LineFinder.obj
+         x64\Release\MatrixOp.obj
+         x64\Release\Morph.obj
+         x64\Release\Outline.obj
+         x64\Release\Source.obj
+         x64\Release\sample.obj
+         x64\Release\test.obj
+         x64\Release\test_byteop.obj
+         x64\Release\test_JContainer.obj
+         x64\Release\test_Outline.obj
+         x64\Release\threshold.obj
+         Generating code
+         Finished generating code
+         junlib.vcxproj -> D:\code\c\junlib\x64\Release\junlib.exe
+     1>Done Building Project "D:\code\c\junlib\junlib\junlib.vcxproj" (Build target(s)).
+
+Build succeeded.
+
+Time Elapsed 00:00:06.58
