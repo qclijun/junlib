@@ -5,10 +5,9 @@ namespace jun{
 	class BLOBNBOX_LIST : public JContainer<BLOBNBOX, std::set<std::shared_ptr<BLOBNBOX>,BoxCmp<BLOBNBOX> > >{
 	public:
 		typedef JContainer<BLOBNBOX, std::set<std::shared_ptr<BLOBNBOX>, BoxCmp<BLOBNBOX> > > BaseTy;
-		typedef BaseTy::container_type container_type;
-		typedef BaseTy::iterator iterator;
-		typedef BaseTy::value_type value_type;
 
+		typedef BaseTy::value_type value_type;
+		typedef BaseTy::iterator iterator;
 
 		int lineCrossing() const{
 			int total = 0;

@@ -120,7 +120,7 @@ namespace jun{
 		if (bbox == nullptr) return result;
 
 		Rect box = bbox->bounding_box();
-		if (!region().contains(box)) return result;  // box not in the grid.
+		if (!bounding_box().contains(box)) return result;  // box not in the grid.
 		int x_start = p.right_tab ? box.right() : box.left();
 		int left_col_edge = bbox->left_rule;
 		int right_col_edge = bbox->right_rule;

@@ -86,8 +86,8 @@ void test_BBGrid(){
 
 
 	//第一行的元素
-	for (int y = 0; y < grid.gridrows(); ++y){
-		for (int x = 0; x < grid.gridcols(); ++x){
+	for (int y = 0; y < grid.rows(); ++y){
+		for (int x = 0; x < grid.cols(); ++x){
 			auto c = grid(x, y);
 			
 			for (auto iter = c.begin(); iter != c.end(); ++iter){

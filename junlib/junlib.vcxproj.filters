@@ -119,10 +119,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\junlib\util.h" />
-    <ClInclude Include="..\..\include\junlib\je_allocator.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\junlib\util.h" />
     <ClInclude Include="LineFinder.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -225,9 +221,6 @@
     <ClInclude Include="test_Outline.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="BBGrid.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="BBGrid.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -263,6 +256,17 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="AlignedBlob.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\junlib\je_allocator.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\junlib\util.h" />
+    <ClInclude Include="..\..\include\junlib\je_allocator.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\junlib\util.h" />
+    <ClInclude Include="BBGrid.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

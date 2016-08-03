@@ -11,7 +11,7 @@ namespace jun{
 
 		for (int y = grid_y1; y <= grid_y2; ++y){
 			for (int x = grid_x1; x <= grid_x2; ++x){
-				_grid[toIndex(x, y)].add(bbox);
+				grid[toIndex(x, y)].add(bbox);
 			}
 		}
 	}
