@@ -115,10 +115,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\junlib\util.h" />
-    <ClInclude Include="..\..\include\junlib\je_allocator.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\junlib\util.h" />
     <ClInclude Include="LineFinder.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -267,6 +263,26 @@
     </ClInclude>
     <ClInclude Include="..\..\include\junlib\util.h" />
     <ClInclude Include="BBGrid.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="JSet.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="PtrCmp.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\junlib\je_allocator.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\junlib\util.h" />
+    <ClInclude Include="..\..\include\junlib\je_allocator.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\junlib\util.h" />
+    <ClInclude Include="BoxCmp.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="log.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

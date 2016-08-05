@@ -101,18 +101,6 @@ namespace jun{
 
 	typedef std::shared_ptr<OUTLINE> POUTLINE;
 
-	template<typename T>
-	struct BoxCmp{
-		bool operator()(T* left, T* right){
-			int result = left->bounding_box().compare(right->bounding_box());
-			if (result<0) return true;
-			if (result>0) return false;
-			return left < right;
-		}
-		bool operator()(std::shared_ptr<T> left, std::shared_ptr<T> right){
-			return this->operator()(left.get(), right.get());
-		}
-	};
 
 
 

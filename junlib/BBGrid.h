@@ -5,11 +5,12 @@
 namespace jun{
 	class GridBase{
 	public:
-		GridBase(Rect region, int gridsize) : box_(region), gridsize_(gridsize){
-			rows_ = (region.height - 1) / gridsize_ + 1;
-			cols_ = (region.width - 1) / gridsize_ + 1;
-			gridnum_ = rows_*cols_;
-		}
+		GridBase(Rect region, int gridsize) : box_(region), gridsize_(gridsize),
+			rows_((region.height - 1) / gridsize_ + 1),
+			cols_((region.width - 1) / gridsize_ + 1),
+			gridnum_(rows_*cols_){}
+
+		virtual ~GridBase(){}
 
 		Rect bounding_box() const{ return box_; }
 		int gridsize() const{ return gridsize_; }
@@ -21,12 +22,12 @@ namespace jun{
 		int toIndex(int grid_x, int grid_y) const{
 			return grid_y*cols_ + grid_x;
 		}
-	private :
-		Rect box_;
-		int gridsize_;
-		int rows_;
-		int cols_;
-		int gridnum_;
+	private:
+		const Rect box_;
+		const int gridsize_;
+		const int rows_;
+		const int cols_;
+		const int gridnum_;
 	};
 
 	template<typename Container>
@@ -40,7 +41,7 @@ namespace jun{
 		}
 
 
-		~BBGrid(){
+		virtual ~BBGrid(){
 			delete[] grid;
 		}
 
@@ -52,6 +53,7 @@ namespace jun{
 
 		void insertBBox(bool h_spread, bool v_spread, const value_type& bbox);
 
+		Container& operator()(int x, int y){
 			return grid[toIndex(x, y)];
 		}
 

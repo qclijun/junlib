@@ -43,6 +43,10 @@ namespace jun{
 		BLOBNBOX();
 		~BLOBNBOX();
 
+		static std::shared_ptr<BLOBNBOX> newObj(){
+			return std::shared_ptr<BLOBNBOX>(new BLOBNBOX);
+		}
+
 		BLOBNBOX(const BLOBNBOX&) = delete;
 		BLOBNBOX(BLOBNBOX&&) = delete;
 		BLOBNBOX& operator=(const BLOBNBOX&) = delete;

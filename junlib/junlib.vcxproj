@@ -28,14 +28,18 @@
     <ClInclude Include="BlobGrid.h" />
     <ClInclude Include="BLOBNBOX.h" />
     <ClInclude Include="BLOBNBOX_LIST.h" />
+    <ClInclude Include="BoxCmp.h" />
     <ClInclude Include="DIR.h" />
     <ClInclude Include="JContainer.h" />
     <ClInclude Include="je_new.h" />
     <ClInclude Include="JMatrixBase.h" />
     <ClInclude Include="JMatrixBase.hpp" />
+    <ClInclude Include="JSet.h" />
+    <ClInclude Include="log.h" />
     <ClInclude Include="Outline.h" />
     <ClInclude Include="OUTLINE_LIST.h" />
     <ClInclude Include="Point.h" />
+    <ClInclude Include="PtrCmp.h" />
     <ClInclude Include="rasterOp.h" />
     <ClInclude Include="byteOp.h" />
     <ClInclude Include="filter.h" />
@@ -145,11 +149,13 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(mylib_base)\include;.;D:\boost_1_61_0;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>$(mylib_base)\x64\lib;D:\boost_1_61_0\stage\lib</AdditionalLibraryDirectories>
+      <AdditionalDependencies>jemalloc.lib;opencv_ts300d.lib;opencv_world300d.lib;libboost_regex-vc120-mt-gd-1_61.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -167,7 +173,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(mylib_base)\x64\lib</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(mylib_base)\x64\lib;</AdditionalLibraryDirectories>
       <AdditionalDependencies>jemalloc.lib;opencv_ts300d.lib;opencv_world300d.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>

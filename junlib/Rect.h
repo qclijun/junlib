@@ -7,13 +7,22 @@
 
 
 namespace jun{
-	template<typename T>
-	inline T  mindiff(T t){ return static_cast<T>(1); }
-	inline int mindiff(int){ return 1; }
-	inline float mindiff(float){ return std::nextafter(0.0f, 1.f); }
-	inline double mindiff(double){ return std::nextafter(0, 1.0); }
 
+
+	template<typename T>
+	struct MinDiff{
+		static  T value() { return static_cast<T>(1); }
+	};
+
+	template<>
+	struct MinDiff<float>{
+		static float value() { return std::numeric_limits<float>::epsilon(); }
+	};
 	
+	template<>
+	struct MinDiff<double>{
+		static double value() { return std::numeric_limits<double>::epsilon(); }
+	};
 
 
 	//////////////////////////////////// Rect /////////////////////////////////
@@ -33,9 +42,15 @@ namespace jun{
 			height = sz.height;
 		}
 
+		BasicRect(BasicPoint2<T> pt){
+			x = pt.x, y = pt.y;
+			width = MinDiff<T>::value();
+			height = MinDiff<T>::value();
+		}
+
 		BasicRect(BasicPoint2<T> pt1, BasicPoint2<T> pt2){
 			int xmin, ymin, xmax, ymax;
-			T es = mindiff(T());
+			T es = MinDiff<T>::value();
 			if (pt1.x < pt2.x) {
 				xmin = pt1.x; xmax = pt2.x + es;
 			}
@@ -48,7 +63,7 @@ namespace jun{
 			else{
 				ymin = pt2.y; ymax = pt1.y + es;
 			}
-			x = xmin; y = ymin; 
+			x = xmin; y = ymin;
 			width = xmax - xmin;
 			height = ymax - ymin;
 		}
@@ -58,17 +73,17 @@ namespace jun{
 		}
 
 		BasicPoint2<T> UR() const{
-			return{ x + width - mindiff(T()), y };
+			return{ x + width - MinDiff<T>::value(), y };
 		}
 
 		//lower left
 		BasicPoint2<T> LL() const{
-			return{ x, y + height - mindiff(T()) };
+			return{ x, y + height - MinDiff<T>::value() };
 		}
 
 		//lower right
 		BasicPoint2<T> LR() const{
-			return{ x + width - mindiff(T()), y + height - mindiff(T()) };
+			return{ x + width - MinDiff<T>::value(), y + height - MinDiff<T>::value() };
 		}
 
 		T left() const{ return x; }
@@ -80,7 +95,7 @@ namespace jun{
 		}
 
 		T right() const{
-			return x + width - mindiff(T());
+			return x + width - MinDiff<T>::value();
 		}
 
 
@@ -89,7 +104,7 @@ namespace jun{
 		}
 
 		T bottom() const{
-			return y + height - mindiff(T());
+			return y + height - MinDiff<T>::value();
 		}
 
 
@@ -109,8 +124,9 @@ namespace jun{
 			return  x <= rect.x && y <= rect.y && rect.xlast() <= xlast() && rect.ylast() <= ylast();
 		}
 
+		// is valid??
 		operator bool() const{
-			return height == 0;
+			return height > 0 && width > 0;
 		}
 
 		template<typename T2>
@@ -118,40 +134,32 @@ namespace jun{
 			return{ x, y, width, height };
 		}
 
+		bool overlap(BasicRect<T> rect) const{
+			return overlap_x(rect) > 0 && overlap_y(rect) > 0;
+	   }
 
-		BasicRect<T> overlap(BasicRect<T> rect) const{
-			if (x >= rect.xlast() || xlast() <= rect.x) return{};
-			if (y >= rect.ylast() || ylast() <= rect.y) return{};
-			int xmin, xmax, ymin, ymax;
-			if (x < rect.xlast()){
-				xmin = x; xmax = rect.xlast();
-			}
-			else{
-				xmin = rect.x; xmax = xlast();
-			}
-			if (y < rect.ylast()){
-				ymin = y; ymax = rect.ylast();
-			}
-			else{
-				ymin = rect.y; ymax = ylast();
-			}
+		BasicRect<T> overlap_rect(BasicRect<T> rect) const{
+			int xmin = std::max(x, rect.x);
+			int xmax = std::min(xlast(), rect.xlast());
+			int ymin = std::max(y, rect.y);
+			int ymax = std::min(ylast(), rect.ylast());
 			return{ xmin, ymin, xmax - xmin, ymax - ymin };
 
 		}
 
 		//负值表示间隙
-		int overlap_x(BasicRect<T> rect){
+		int overlap_x(BasicRect<T> rect) const{
 			return std::min(xlast(), rect.xlast()) - std::max(x, rect.x);
 		}
 
-		int overlap_y(BasicRect<T> rect){
+		int overlap_y(BasicRect<T> rect) const{
 			return std::min(ylast(), rect.ylast()) - std::max(y, rect.y);
 		}
 
 
 		//union a point
 		Self& operator+=(BasicPoint2<T> pt){
-			T es = mindiff(T());
+			T es = MinDiff<T>::value();
 			if (pt.x < x) x = pt.x;
 			if (pt.y < y) y = pt.y;
 			if (pt.x >= xlast()) width = pt.x + es - x;
@@ -168,15 +176,15 @@ namespace jun{
 			return *this;
 		}
 
-		int compare(Self right) const{
-			auto result = x - right.x;
-			if (result != 0) return result<0?-1:1 ;
-			result = xlast() - right.xlast();
-			if (result != 0) return result<0 ? -1 : 1;
-			result = y - right.y;
-			if (result != 0) return result<0 ? -1 : 1;
-			return (ylast() - right.ylast()) < 0 ? -1 : 1;
-		}
+		//T compare(Self right) const{
+		//	auto result = x - right.x; // result may be overflowed.
+		//	if (result != 0) return result ;
+		//	result = xlast() - right.xlast();
+		//	if (result != 0) return result;
+		//	result = y - right.y;
+		//	if (result != 0) return result;
+		//	return (ylast() - right.ylast());
+		//}
 
 		T area() const{
 			return width*height;
@@ -221,8 +229,15 @@ inline bool operator!=(jun::BasicRect<T> left, jun::BasicRect<T> right){
 	return !(left == right);
 }
 
+//template<typename T>
+//inline bool operator<(jun::BasicRect<T> left, jun::BasicRect<T> right){
+//	return left.compare(right) < 0;
+//}
+
 template<typename T>
 inline bool operator<(jun::BasicRect<T> left, jun::BasicRect<T> right){
-	return left.compare(right) < 0;
+	if (left.x != right.x) return left.x < right.x;
+	if (left.xlast() != right.xlast()) return left.xlast() < right.xlast();
+	if (left.y != right.y) return left.y < right.y;
+	return left.ylast() < right.ylast();
 }
-

@@ -3,3 +3,11 @@
 *.jpg
 *.sdf
 junlib.opensdf
+*.exe
+*.pdb
+*.obj
+*.log
+*.tlog
+junlib/Debug/vc120.idb
+*.obj
+*.obj

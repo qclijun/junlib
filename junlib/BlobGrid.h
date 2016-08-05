@@ -9,7 +9,7 @@ namespace jun{
 	class BlobGrid : public BBGrid<BLOBNBOX_LIST>{
 	public:
 		BlobGrid(RectS box, int gridsize) :BBGrid(box, gridsize){}
-		~BlobGrid(){}
+		virtual ~BlobGrid(){}
 
 		void insertBlobList(BLOBNBOX_LIST bloblist);
 	};

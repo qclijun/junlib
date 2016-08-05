@@ -5,6 +5,7 @@
 
 #include "JContainer.h"
 #include "Outline.h"
+#include "BoxCmp.h"
 
 namespace jun{
 

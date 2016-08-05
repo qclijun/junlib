@@ -26,6 +26,7 @@
 #include "test_Outline.h"
 #include "test_JContainer.h"
 #include "BLOBNBOX.h"
+#include "JSet.h"
 
 
 using namespace std;
@@ -66,7 +67,7 @@ inline bool operator==(const A& left, const A& right){
 }
 
 inline bool operator<(const A& left, const A& right){
-	return true;
+	return left.x < right.x;
 }
 
 template<typename T>
@@ -75,6 +76,10 @@ struct ACmp{
 		if (left->x < right->x) return true;
 		if (right->x < left->x) return false;
 		return left < right;
+	}
+
+	bool operator()(std::shared_ptr<T> left, std::shared_ptr<T> right){
+		return this->operator()(left.get(), right.get());
 	}
 };
 
@@ -85,20 +90,6 @@ std::ostream& operator<<(std::ostream&  out, const A& a){
 }
 
 
-template<size_t N>
-struct binary{
-	static const int value{ binary<N / 10>::value * 2 + N % 10 };
-};
-
-template<>
-struct binary < 0 > {
-	static const int value{ 0 };
-};
-
-
-
-
-//#define _DEBUG_LT_PRED(pred, x, y)  pred(x, y)
 
 
 
@@ -109,33 +100,20 @@ int main(int argc, char** argv){
 	//je_mallctl("opt.narenas", &narenas, &sz, NULL, 0);
 	//cout << narenas << endl;
 
+	cout << std::boolalpha;
 
 
 	cout << sizeof(BLOBNBOX) << endl;
 	cout << sizeof(OUTLINE_LIST) << endl;
 	cout << sizeof(std::shared_ptr<int>) << endl;
+	
 
-
-	A a1{ 3, 4 };
-	A a2{ 3, 5 };
-	cout << (a1 < a2) << endl;
-	cout << (a2 < a1) << endl;
-	ACmp<A> cmp;
-	cout << cmp(&a1, &a2) << endl;
-
-	std::set<A*, ACmp<A>> myset;
-	myset.insert(&a1);
-	myset.insert(&a2);
-	myset.insert(&a1);
-	for (auto c : myset){
-		cout << c->x << ',' << c->y << endl;
-	}
-
-	double d = -0.5;
-	int i = (d<0?-1:1);
-	cout << i << endl;
-
-	cout << binary<101010101>::value << endl;
+	jun::Rect box(3, 4, 10, 10);
+	jun::Rect box2(100,50, 2, 2);
+	auto box3 = box.overlap_rect(box2);
+	cout << (bool)box3 << endl;
+	cout << (box < box2) << endl;
+	cout << box.overlap(box2) << endl;
 
 	//test_BBGrid();
 	{

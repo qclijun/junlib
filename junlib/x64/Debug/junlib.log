@@ -1,25 +1,10 @@
-﻿Build started 2016/8/3 18:24:17.
-     1>Project "D:\code\c\junlib\junlib\junlib.vcxproj" on node 2 (Rebuild target(s)).
+﻿Build started 2016/8/5 13:55:24.
+     1>Project "D:\code\c\junlib\junlib\junlib.vcxproj" on node 2 (Build target(s)).
      1>ClCompile:
-         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\x86_amd64\CL.exe /c /ID:\code\c\include /I. /Zi /nologo /W3 /WX- /sdl /Od /D WIN32 /D _DEBUG /D _CONSOLE /D _LIB /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"x64\Debug\\" /Fd"x64\Debug\vc120.pdb" /Gd /TP /wd4819 /errorReport:prompt -D_SCL_SECURE_NO_WARNINGS AlignedBlob.cpp BBGrid.cpp BlobGrid.cpp BLOBNBOX.cpp DIR.cpp floodfill.cpp je_new.cpp LineFinder.cpp MatrixOp.cpp Morph.cpp Outline.cpp Source.cpp src\sample.cpp test.cpp test_byteop.cpp test_JContainer.cpp test_Outline.cpp threshold.cpp
-         threshold.cpp
-         test_Outline.cpp
-         test_JContainer.cpp
-         test_byteop.cpp
-         test.cpp
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\x86_amd64\CL.exe /c /ID:\code\c\include /I. /Zi /nologo /W3 /WX- /sdl /Od /D WIN32 /D _DEBUG /D _CONSOLE /D _LIB /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"x64\Debug\\" /Fd"x64\Debug\vc120.pdb" /Gd /TP /wd4819 /errorReport:prompt -D_SCL_SECURE_NO_WARNINGS LineFinder.cpp src\sample.cpp
          sample.cpp
-         Source.cpp
-         Outline.cpp
-         Morph.cpp
-         MatrixOp.cpp
          LineFinder.cpp
-         je_new.cpp
-         floodfill.cpp
-         DIR.cpp
-         BLOBNBOX.cpp
-         BlobGrid.cpp
-         BBGrid.cpp
-         AlignedBlob.cpp
+     1>LineFinder.cpp(157): warning C4267: 'return' : conversion from 'size_t' to 'int', possible loss of data
          Generating Code...
        Link:
          C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\x86_amd64\link.exe /ERRORREPORT:PROMPT /OUT:"D:\code\c\junlib\x64\Debug\junlib.exe" /INCREMENTAL /NOLOGO /LIBPATH:D:\code\c\x64\lib jemalloc.lib opencv_ts300d.lib opencv_world300d.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"D:\code\c\junlib\x64\Debug\junlib.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"D:\code\c\junlib\x64\Debug\junlib.lib" /MACHINE:X64 x64\Debug\AlignedBlob.obj
@@ -41,8 +26,8 @@
          x64\Debug\test_Outline.obj
          x64\Debug\threshold.obj
          junlib.vcxproj -> D:\code\c\junlib\x64\Debug\junlib.exe
-     1>Done Building Project "D:\code\c\junlib\junlib\junlib.vcxproj" (Rebuild target(s)).
+     1>Done Building Project "D:\code\c\junlib\junlib\junlib.vcxproj" (Build target(s)).
 
 Build succeeded.
 
-Time Elapsed 00:00:15.09
+Time Elapsed 00:00:03.75

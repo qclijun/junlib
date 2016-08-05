@@ -15,8 +15,8 @@ void  test_byteop(){
 	uchar*  tmp = new uchar[SZ];
 	uchar*  tmp2 = new uchar[SZ];
 
-	generate_n(src, SZ, []{return std::rand() % UCHAR_MAX; });
-	generate_n(dst, SZ, []{return std::rand() % UCHAR_MAX; });
+	generate(src, src+SZ, []()->uchar{return std::rand() % UCHAR_MAX; });
+	generate(dst, dst+SZ, []()->uchar{return std::rand() % UCHAR_MAX; });
 
 	
 	double jizhun = 1.0;

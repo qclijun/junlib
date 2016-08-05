@@ -1,6 +1,7 @@
 #pragma once
 
 #include "je_new.h"
+#include <type_traits>
 #include <iostream>
 #include "types.h"
 #include "byteOp.h"
@@ -13,7 +14,7 @@ namespace jun{
 
 	template<typename T>
 	class JMatrixBase{
-
+		static_assert(std::is_arithmetic<T>::value, "T must be arithmetic.");
 	public:
 		typedef T channel_type;
 		typedef T* iterator_type;
@@ -28,6 +29,7 @@ namespace jun{
 
 		
 		JMatrixBase(const Self& other) :Self(other.rows(), other.cols(), other.channels()){
+			
 			std::memcpy(begin(), other.begin(), bytes());
 		}
 

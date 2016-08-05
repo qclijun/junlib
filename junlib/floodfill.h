@@ -10,15 +10,15 @@ namespace  FloodFill{
 		FOUR = 4, EIGHT = 8
 	};
 
-	Rect floodfill(BinaryJMatrix& m, Rect imgRegion, Point seed, Connectivity connectivity = Connectivity::FOUR);
+	Rect floodfill(BinaryJMatrix& m, Rect imgRegion, Point seed, Connectivity connectivity = Connectivity::EIGHT);
 
-	inline Rect floodfill(BinaryJMatrix& m, Point seed, Connectivity connectivity = Connectivity::FOUR){
+	inline Rect floodfill(BinaryJMatrix& m, Point seed, Connectivity connectivity = Connectivity::EIGHT){
 		return floodfill(m, m.rect(),  seed,connectivity);
 	}
 
-	void getConnComp(const BinaryJMatrix& m, Rect imgRegion, std::deque<Rect>& rects, Connectivity connectivity = Connectivity::FOUR);
+	void getConnComp(const BinaryJMatrix& m, Rect imgRegion, std::deque<Rect>& rects, Connectivity connectivity = Connectivity::EIGHT);
 
-	inline void getConnComp(const BinaryJMatrix& m, std::deque<Rect>& rects, Connectivity connectivity = Connectivity::FOUR){
+	inline void getConnComp(const BinaryJMatrix& m, std::deque<Rect>& rects, Connectivity connectivity = Connectivity::EIGHT){
 		getConnComp(m, m.rect(),rects, connectivity);
 	}
 
@@ -34,7 +34,7 @@ namespace  FloodFill{
 	//∏¥‘”∂»4*O(N)ªÚ8*O(N)
 	JMatrixI computeDistance(const BinaryJMatrix& src, Connectivity connectivity);
 
-	void seedFillBinary( BinaryJMatrix& dst, BinaryJMatrix& mask, Connectivity connectivity = Connectivity::FOUR);
+	void seedFillBinary( BinaryJMatrix& dst, BinaryJMatrix& mask, Connectivity connectivity = Connectivity::EIGHT);
 
 
 }
