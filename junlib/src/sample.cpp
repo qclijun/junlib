@@ -27,7 +27,7 @@
 #include "test_JContainer.h"
 #include "BLOBNBOX.h"
 #include "JSet.h"
-
+#include "fmt\ostream.h"
 
 using namespace std;
 using namespace jun;
@@ -60,6 +60,7 @@ void testFF4(){
 struct A{
 	int x, y;
 
+	A(int xx, int yy) :x(xx), y(yy){}
 };
 
 inline bool operator==(const A& left, const A& right){
@@ -85,9 +86,9 @@ struct ACmp{
 
 
 
-std::ostream& operator<<(std::ostream&  out, const A& a){
-	return out << a.x << ", " << a.y ;
-}
+	std::ostream& operator<<(std::ostream&  out, const A& a){
+		return out << a.x << ", " << a.y;
+	}
 
 
 
@@ -100,20 +101,12 @@ int main(int argc, char** argv){
 	//je_mallctl("opt.narenas", &narenas, &sz, NULL, 0);
 	//cout << narenas << endl;
 
-	cout << std::boolalpha;
-
-
-	cout << sizeof(BLOBNBOX) << endl;
-	cout << sizeof(OUTLINE_LIST) << endl;
-	cout << sizeof(std::shared_ptr<int>) << endl;
-	
-
-	jun::Rect box(3, 4, 10, 10);
-	jun::Rect box2(100,50, 2, 2);
-	auto box3 = box.overlap_rect(box2);
-	cout << (bool)box3 << endl;
-	cout << (box < box2) << endl;
-	cout << box.overlap(box2) << endl;
+	//auto logger = mylogger::root_logger();
+	A rect(1,3);
+	cout << rect << endl;
+	string s = fmt::format("Rect {}", rect);
+	cout << s << endl;
+	//logger->debug("Rect: {}", rect);
 
 	//test_BBGrid();
 	{
@@ -121,20 +114,20 @@ int main(int argc, char** argv){
 	//test_dilate_h();
 		// test_byteop();
 
-		//string filename = "test-image_b.png";
-		//auto index = filename.find_last_of('.');
-		//if (index == string::npos) throw runtime_error("no file extension");
+		string filename = "test-image_b.png";
+		auto index = filename.find_last_of('.');
+		if (index == string::npos) throw runtime_error("no file extension");
 
-		//string name = filename.substr(0, index);
-		//string ext = filename.substr(index);
+		string name = filename.substr(0, index);
+		string ext = filename.substr(index);
 
-		//JMatrix m = readImage(filename,ReadImageFlag::GRAYSCALE);
-		//BinaryJMatrix binary = gray2b(m);
-		//cout << m.rows() << ' ' << m.cols() << ' ' << m.channels() << endl;
-		//
-		//LineFinder finder(binary);
-		//finder.getLineMasks();
-
+		JMatrix m = readImage(filename,ReadImageFlag::GRAYSCALE);
+		BinaryJMatrix binary = gray2b(m);
+		cout << m.rows() << ' ' << m.cols() << ' ' << m.channels() << endl;
+		
+		LineFinder finder(binary);
+		finder.getLineMasks();
+		finder.findAndRemoveVLines();
 		
 
 

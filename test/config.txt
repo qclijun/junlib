@@ -1,1 +1,32 @@
-rootLogger.level = info
+sink.type = stdout_mt
+sink.name = console
+
+sink.type = simple_file_mt
+sink.name = file_sink
+sink.filename = log.txt
+
+sink.type = rotating_file_mt
+sink.name = file2_sink
+sink.filename = log333.txt
+sink.max_size=333333
+sink.max_files=3
+
+logger.type = root
+logger.name = root
+logger.addsink = console
+logger.addsink = file_sink
+logger.level = debug
+
+logger.type = single
+logger.name = whatttt::MyClass
+logger.addsink = file_sink
+logger.level = info
+
+logger.type = combine
+logger.name = combine_logger
+logger.addsink = console
+logger.addsink = file2_sink
+logger.level = t
+
+
+

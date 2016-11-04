@@ -27,7 +27,7 @@ namespace jun{
 		value_type y;
 		value_type z;
 
-		BasicVec3() :x(0), y(0),z(0){
+		BasicVec3() :x(0), y(0), z(0){
 			//checkType();
 		}
 		BasicVec3(value_type x_, value_type y_, value_type z_ = 0) :x(x_), y(y_), z(z_){
@@ -58,7 +58,7 @@ namespace jun{
 		//convertor 
 		template<typename T2>
 		operator BasicVec3<T2>() const {
-			return BasicVec3<T2>(static_cast<T2>(x), static_cast<T2>(y),static_cast<T2>(z));
+			return BasicVec3<T2>(static_cast<T2>(x), static_cast<T2>(y), static_cast<T2>(z));
 		}
 
 		template<typename T2>
@@ -115,60 +115,66 @@ namespace jun{
 	typedef BasicVec3<double> Vec3d;
 
 
+
+
+
+
+
+
+
+	template<typename T>
+	inline bool operator==(jun::BasicVec3<T> left, jun::BasicVec3<T> right){
+		return left.x == right.x&&left.y == right.y&&left.z == right.z;
+	}
+
+	template<typename T>
+	inline bool operator!=(jun::BasicVec3<T> left, jun::BasicVec3<T> right){
+		return !(left == right);
+	}
+
+	template<typename T>
+	inline jun::BasicVec3<T> operator+(jun::BasicVec3<T> a, jun::BasicVec3<T> b){
+		return jun::BasicVec3<T>(a.x + b.x, a.y + b.y, a.z + b.z);
+	}
+
+	template<typename T>
+	inline jun::BasicVec3<T> operator-(jun::BasicVec3<T> a, jun::BasicVec3<T> b){
+		return jun::BasicVec3<T>(a.x - b.x, a.y - b.y, a.z - b.z);
+	}
+
+	template<typename T>
+	inline jun::BasicVec3<T> operator*(jun::BasicVec3<T> a, double b){
+		return jun::BasicVec3<T>(a.x*b, a.y *b, a.z*b);
+	}
+
+	template<typename T>
+	inline jun::BasicVec3<T> operator*(double b, jun::BasicVec3<T> a){
+		return jun::BasicVec3<T>(a.x*b, a.y *b, a.z*b);
+	}
+
+	template<typename T>
+	inline jun::BasicVec3<T> operator*(jun::BasicVec3<T> a, int b){
+		return jun::BasicVec3<T>(a.x*b, a.y *b, a.z*b);
+	}
+
+	template<typename T>
+	inline jun::BasicVec3<T> operator*(int b, jun::BasicVec3<T> a){
+		return jun::BasicVec3<T>(a.x*b, a.y *b, a.z*b);
+	}
+
 }
 
 
-template<typename T>
-inline std::ostream& operator<<(std::ostream& out, jun::BasicVec3<T> vec){
-	out << '{' << std::setw(4) << vec.x << ", " << std::setw(4) << vec.y << ", " << std::setw(4) << vec.z << '}';
-	return out;
-}
 
-template<>
-inline std::ostream& operator<<(std::ostream& out, jun::BasicVec3<unsigned char> vec){
-	out << '{' << std::setw(4) << static_cast<int>(vec.x) << ", " << std::setw(4) << static_cast<int>(vec.y)
-		<< ", " << std::setw(4) << static_cast<int>(vec.z) << '}';
-	return out;
-}
+	template<typename T>
+	inline std::ostream& operator<<(std::ostream& out, jun::BasicVec3<T> vec){
+		out << '{' << std::setw(4) << vec.x << ", " << std::setw(4) << vec.y << ", " << std::setw(4) << vec.z << '}';
+		return out;
+	}
 
-
-
-template<typename T>
-inline bool operator==(jun::BasicVec3<T> left, jun::BasicVec3<T> right){
-	return left.x == right.x&&left.y == right.y&&left.z==right.z;
-}
-
-template<typename T>
-inline bool operator!=(jun::BasicVec3<T> left, jun::BasicVec3<T> right){
-	return !(left == right);
-}
-
-template<typename T>
-inline jun::BasicVec3<T> operator+(jun::BasicVec3<T> a, jun::BasicVec3<T> b){
-	return jun::BasicVec3<T>(a.x + b.x, a.y + b.y,a.z+b.z);
-}
-
-template<typename T>
-inline jun::BasicVec3<T> operator-(jun::BasicVec3<T> a, jun::BasicVec3<T> b){
-	return jun::BasicVec3<T>(a.x - b.x, a.y - b.y,a.z-b.z);
-}
-
-template<typename T>
-inline jun::BasicVec3<T> operator*(jun::BasicVec3<T> a, double b){
-	return jun::BasicVec3<T>(a.x*b, a.y *b,a.z*b);
-}
-
-template<typename T>
-inline jun::BasicVec3<T> operator*(double b, jun::BasicVec3<T> a){
-	return jun::BasicVec3<T>(a.x*b, a.y *b,a.z*b);
-}
-
-template<typename T>
-inline jun::BasicVec3<T> operator*(jun::BasicVec3<T> a, int b){
-	return jun::BasicVec3<T>(a.x*b, a.y *b,a.z*b);
-}
-
-template<typename T>
-inline jun::BasicVec3<T> operator*(int b, jun::BasicVec3<T> a){
-	return jun::BasicVec3<T>(a.x*b, a.y *b,a.z*b);
-}
+	template<>
+	inline std::ostream& operator<<(std::ostream& out, jun::BasicVec3<unsigned char> vec){
+		out << '{' << std::setw(4) << static_cast<int>(vec.x) << ", " << std::setw(4) << static_cast<int>(vec.y)
+			<< ", " << std::setw(4) << static_cast<int>(vec.z) << '}';
+		return out;
+	}

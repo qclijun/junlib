@@ -11,12 +11,15 @@ namespace jun{
 	public:
 		typedef BasicVec2<T> baseType;
 
-		BasicPoint2(T x = T(), T y = T()) :baseType(x, y){}
+		BasicPoint2() :baseType(0, 0){}
+
+		BasicPoint2(T x , T y ) :baseType(x, y){}
 
 		BasicPoint2(BasicVec2<T> v) :baseType(v){}
 	};
 
-	typedef BasicPoint2<int> Point;
+	//typedef BasicPoint2<int> Point;
+	using Point = BasicPoint2 < int > ;
 	typedef BasicPoint2<short> PointS;
 	typedef BasicPoint2<int> PointI;
 	typedef BasicPoint2<float> PointF;
@@ -60,4 +63,11 @@ namespace jun{
 	typedef BasicSize<float> SizeF;
 	typedef BasicSize<double> SizeD;
 
+}
+
+
+template<typename T>
+inline std::ostream& operator<<(std::ostream& out, jun::BasicPoint2<T> vec){
+	out << '{' << std::setw(4) << vec.x << "," << std::setw(4) << vec.y << '}';
+	return out;
 }

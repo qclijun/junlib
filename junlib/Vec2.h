@@ -72,13 +72,23 @@ namespace jun{
 			return *this;
 		}
 
+		//MyType& operator*=(int i){
+		//	x *= i; y *= i;
+		//	return *this;
+		//}
+
+
 		MyType& operator*=(double d){
-			x *= d; y *= d;
+			x = static_cast<T>(x*d);
+			y = static_cast<T>(y*d);
+			//x *= d; y *= d;
 			return *this;
 		}
 
 		MyType& operator/=(double d){
-			x /= d; y /= d;
+			x = static_cast<T>(x / d);
+			y = static_cast<T>(y / d);
+			//x /= d; y /= d;
 			return *this;
 		}
 
@@ -86,7 +96,7 @@ namespace jun{
 			return std::sqrt(x*x + y*y);
 		}
 
- 
+
 		T dot_product(MyType a){
 			return (x*a.x + y*a.y);
 		}
@@ -111,69 +121,73 @@ namespace jun{
 	typedef BasicVec2<double> Vec2d;
 
 
+
+
+
+
+
+
+
+
+	template<typename T>
+	inline bool operator==(const jun::BasicVec2<T>& left, const jun::BasicVec2<T>& right){
+		return left.x == right.x&&left.y == right.y;
+	}
+
+	template<typename T>
+	inline bool operator!=(const jun::BasicVec2<T>& left, const jun::BasicVec2<T>& right){
+		return !(left == right);
+	}
+
+	template<typename T>
+	inline bool operator<(jun::BasicVec2<T> left, jun::BasicVec2<T> right){
+		return (left.x < right.x) || ((left.x == right.x) && (left.y < right.y));
+	}
+
+
+	template<typename T>
+	inline jun::BasicVec2<T> operator+(jun::BasicVec2<T> a, jun::BasicVec2<T> b){
+		return jun::BasicVec2<T>(a.x + b.x, a.y + b.y);
+	}
+
+	template<typename T>
+	inline jun::BasicVec2<T> operator-(jun::BasicVec2<T> a, jun::BasicVec2<T> b){
+		return jun::BasicVec2<T>(a.x - b.x, a.y - b.y);
+	}
+
+	template<typename T>
+	inline jun::BasicVec2<double> operator*(jun::BasicVec2<T> a, double b){
+		return jun::BasicVec2<double>(a.x*b, a.y *b);
+	}
+
+	template<typename T>
+	inline jun::BasicVec2<double> operator*(double b, jun::BasicVec2<T> a){
+		return a*b;
+	}
+
+	template<typename T>
+	inline jun::BasicVec2<T> operator*(jun::BasicVec2<T> a, int b){
+		return jun::BasicVec2<T>(a.x*b, a.y *b);
+	}
+
+	template<typename T>
+	inline jun::BasicVec2<T> operator*(int b, jun::BasicVec2<T> a){
+		return a*b;
+	}
+
+
+
+
+
 }
 
+	template<typename T>
+	inline std::ostream& operator<<(std::ostream& out, jun::BasicVec2<T> vec){
+		out << '{' << std::setw(4) << vec.x << "," << std::setw(4) << vec.y << '}';
+		return out;
+	}
 
-
-template<typename T>
-inline std::ostream& operator<<(std::ostream& out, jun::BasicVec2<T> vec){
-	out << '{' << std::setw(4) << vec.x << "," << std::setw(4) << vec.y << '}';
-	return out;
-}
-
-template<>
-inline std::ostream& operator<<(std::ostream& out, jun::BasicVec2<unsigned char> vec){
-	out << '{' << std::setw(4) << static_cast<int>(vec.x) << "," << std::setw(4) << static_cast<int>(vec.y) << '}';
-	return out;
-}
-
-
-
-template<typename T>
-inline bool operator==(jun::BasicVec2<T> left, jun::BasicVec2<T> right){
-	return left.x == right.x&&left.y == right.y;
-}
-
-template<typename T>
-inline bool operator!=(jun::BasicVec2<T> left, jun::BasicVec2<T> right){
-	return !(left == right);
-}
-
-template<typename T>
-inline bool operator<(jun::BasicVec2<T> left, jun::BasicVec2<T> right){
-	return (left.x < right.x) || ((left.x == right.x) && (left.y < right.y));
-}
-
-
-template<typename T>
-inline jun::BasicVec2<T> operator+(jun::BasicVec2<T> a, jun::BasicVec2<T> b){
-	return jun::BasicVec2<T>(a.x + b.x, a.y + b.y);
-}
-
-template<typename T>
-inline jun::BasicVec2<T> operator-(jun::BasicVec2<T> a, jun::BasicVec2<T> b){
-	return jun::BasicVec2<T>(a.x - b.x, a.y - b.y);
-}
-
-template<typename T>
-inline jun::BasicVec2<double> operator*(jun::BasicVec2<T> a, double b){
-	return jun::BasicVec2<double>(a.x*b, a.y *b);
-}
-
-template<typename T>
-inline jun::BasicVec2<double> operator*(double b,jun::BasicVec2<T> a){
-	return a*b;
-}
-
-template<typename T>
-inline jun::BasicVec2<T> operator*(jun::BasicVec2<T> a, int b){
-	return jun::BasicVec2<T>(a.x*b, a.y *b);
-}
-
-template<typename T>
-inline jun::BasicVec2<T> operator*(int b, jun::BasicVec2<T> a){
-	return a*b;
-}
-
-
-
+	inline std::ostream& operator<<(std::ostream& out, jun::BasicVec2<unsigned char> vec){
+		out << '{' << std::setw(4) << static_cast<int>(vec.x) << "," << std::setw(4) << static_cast<int>(vec.y) << '}';
+		return out;
+	}

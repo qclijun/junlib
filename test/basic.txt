@@ -1,0 +1,5 @@
+[2016-08-05 16:20:22.881] [basic_logger] [info] Some log message 3 2 ,three
+[2016-08-05 16:23:25.448] [basic_logger] [info] Some log message 3 2 ,three
+[2016-08-05 16:23:37.402] [basic_logger] [info] Some log message 3 2 ,three
+[2016-08-05 16:24:13.527] [basic_logger] [info] Some log message 3 2 ,three
+[2016-08-05 16:24:29.777] [basic_logger] [info] Some log message 3 2 ,three

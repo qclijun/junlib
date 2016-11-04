@@ -5,7 +5,7 @@
 #include "types.h"
 #include "DIR.h"
 #include <iostream>
-
+#include "BoxCmp.h"
 
 namespace jun{
 	using std::vector;

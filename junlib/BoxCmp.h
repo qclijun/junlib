@@ -26,9 +26,12 @@ namespace jun{
 			if (result != 0) return result < 0;
 			result = box1.top() - box2.top();
 			if (result != 0) return result < 0;
-			return left->get() < right->get();
+			return left.get() < right.get();
 		}
 	};
+
+
+
 }
 
 

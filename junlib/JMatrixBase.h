@@ -3,6 +3,7 @@
 #include "je_new.h"
 #include <type_traits>
 #include <iostream>
+#include <utility>
 #include "types.h"
 #include "byteOp.h"
 #include "junlib\util.h"
@@ -12,6 +13,8 @@ namespace jun{
 
 	class BinaryJMatrix;
 
+
+	// 具体类， 按值复制
 	template<typename T>
 	class JMatrixBase{
 		static_assert(std::is_arithmetic<T>::value, "T must be arithmetic.");
@@ -21,40 +24,43 @@ namespace jun{
 		typedef const  T*  const_iterator_type;
 		typedef JMatrixBase<T> Self;
 
-		static const int BPC  { sizeof(channel_type) };//bypes per channel
+		static const int BPC{ sizeof(channel_type) };//bypes per channel
 
 
-		JMatrixBase(int rows,int cols,int channels = 1);
+		JMatrixBase(int rows, int cols, int channels = 1);
 		JMatrixBase(int rows, int cols, int channels, T val);
 
-		
+
 		JMatrixBase(const Self& other) :Self(other.rows(), other.cols(), other.channels()){
-			
+
 			std::memcpy(begin(), other.begin(), bytes());
 		}
 
 		JMatrixBase(const Self& other, bool copyData) :Self(other.rows(), other.cols(), other.channels()){
-			if(copyData) std::memcpy(begin(), other.begin(), bytes());
+			if (copyData) std::memcpy(begin(), other.begin(), bytes());
 		}
 
 		JMatrixBase(Self&& other) :_rows(other._rows), _cols(other._cols),
-			_channels(other._channels), 
+			_channels(other._channels),
 			_data(other._data){
 			other._data = nullptr;
 		}
 
 		Self& operator=(const Self& other){
 			if (this != &other){
-				release();
+				//release(); 先分配在释放原对象
+				T* tmp = new T[channelNum()];
+				std::memcpy(tmp, other._data, bytes());
 				_rows = other._rows;
 				_cols = other._cols;
 				_channels = other._channels;
-				_data = new T[channelNum()];
-				std::memcpy(_data, other._data, bytes());
+				release();
+				_data = tmp;
 			}
 			return *this;
 		}
-	public:
+
+		//不会失败
 		Self& operator=(Self&& other){
 			if (this != &other){
 				release();
@@ -67,14 +73,23 @@ namespace jun{
 			return *this;
 		}
 
+
 		~JMatrixBase(){
 			release();
 		}
 
+		void swap(Self& other){
+			std::swap(_rows_, other._rows);
+			std::swap(_cols_, other._cols);
+			std::swap(_channels, other._channels);
+			std::swap(_data, other._data);
+		}
+	private:
 		void release(){
 			delete[] _data;
 			_data = nullptr;
 		}
+
 
 	public:
 		//iterator
@@ -85,18 +100,18 @@ namespace jun{
 		const_iterator_type end() const { return _data + channelNum(); }
 
 
-		iterator_type iter(int row, int col=0){
+		iterator_type iter(int row, int col = 0){
 			return begin() + row*cpl() + col*channels();
 		}
 
-		const_iterator_type iter(int row, int col=0)const{
+		const_iterator_type iter(int row, int col = 0)const{
 			return begin() + row*cpl() + col*channels();
 		}
 
 		template<typename T2>
-		T2* iter(int row, int col=0){ return (T2*)iter(row, col); }
+		T2* iter(int row, int col = 0){ return (T2*)iter(row, col); }
 		template<typename T2>
-		const T2* iter(int row, int col=0) const{ return (const T2*)iter(row, col); }
+		const T2* iter(int row, int col = 0) const{ return (const T2*)iter(row, col); }
 
 		//access
 		channel_type& operator()(int row, int col = 0){
@@ -137,7 +152,7 @@ namespace jun{
 		int cpl() const{ return cols()*channels(); } //channels per line 
 		int bpl() const { return cpl()*BPC; } //bytes per line
 		size_t elemNum() const{ return rows()*cols(); }
-		size_t channelNum() const{ return elemNum()*channels(); }		
+		size_t channelNum() const{ return elemNum()*channels(); }
 		size_t bytes() const { return channelNum()*BPC; }
 
 		bool isSameDimension(const Self& other) const{
@@ -152,7 +167,7 @@ namespace jun{
 		int _channels;
 		T* _data;
 	}; // end of class JMatrixBase
-	
+
 
 	typedef jun::JMatrixBase<unsigned char> JMatrix;
 
@@ -165,7 +180,14 @@ namespace jun{
 
 	typedef jun::JMatrixBase<unsigned char> GrayImg;
 
-} // end of namespace jun;
+
+	template<typename T>
+	inline void swap(JMatrixBase<T>& m1, JMatrixBase<T>& m2){
+		m1.swap(m2);
+	}
+
+
+
 
 
 
@@ -180,18 +202,9 @@ template<typename T>
 inline bool operator!=(const jun::JMatrixBase<T>& m1, const jun::JMatrixBase<T>& m2){
 	return !(m1 == m2);
 }
-//
-//
-//inline bool operator==(const jun::JMatrix& m1, const jun::JMatrix& m2){
-//	if (&m1 == &m2) return true;
-//	if (!m1.isSameDimension(m2)) return false;
-//	return std::memcmp(m1.begin(), m2.begin(), m1.bytes()) == 0;
-//}
 
+} // end of namespace jun;
 
-//inline bool operator!=(const jun::JMatrix& m1, const jun::JMatrix& m2){
-//	return !(m1 == m2);
-//}
 
 
 template<typename T>

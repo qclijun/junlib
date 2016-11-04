@@ -5,10 +5,11 @@
 
 #include "JMatrix.h"
 #include "BLOBNBOX.h"
+#include "AlignedBlob.h"
+#include "junlib\spdlog\mylogger.h"
+#include "fmt\ostream.h"
 
 namespace jun{
-
-	int LINE_FINDER_DEBUG_LEVEL;
 
 	class LineFinder{
 	private:
@@ -40,7 +41,22 @@ namespace jun{
 		void getLineBlobs(bool horizontal_lines, BinaryJMatrix* pix_lines, BinaryJMatrix* pix_intersections,
 			std::set<PBLOBNBOX, Cmp>& result);
 
+
+		PBLOBNBOX findAlignedBlob(const jun::AlignedBlobParams& p, std::set<PBLOBNBOX, BoxCmp_LT<BLOBNBOX>>& bset, PBLOBNBOX bbox);
+
+		void findAlignedBlobs(std::deque<PBLOBNBOX>& aligned_blobs,const AlignedBlobParams& p, std::set<PBLOBNBOX, BoxCmp_LT<BLOBNBOX>>& bset, PBLOBNBOX bbox);
+
+
+		void findVerticalAlignment(const AlignedBlobParams& p, std::set<PBLOBNBOX, BoxCmp_LT<BLOBNBOX>>& bset, PBLOBNBOX bbox);
+
+
 		static int numTouchingIntersections(Rect box, BinaryJMatrix* intersection_pix);
+
+		static mylogger::spdlog_ptr& logger(){
+			static mylogger::spdlog_ptr s_logger{ mylogger::get_logger("jun::LineFinder") };
+			return s_logger;
+		}
+
 	private:
 
 		BinaryJMatrix  binary;
@@ -65,11 +81,15 @@ namespace jun{
 		const static int kMaxLineResidue{ 6 };
 		const static int kMinThickLineWidth{ 12 };
 		const static int kCrackSpacing{ 100 };
+
+		
+
 		const static double kThickLengthMultiple;
 		const static double kMaxStaveHeight;
 		const static double kMaxNonLineDensiBinaryJMatrix;
 
 	};
+
 
 
 	//将line_pix转换为blobnbox的集合,由cmp指定排序算法
@@ -96,13 +116,13 @@ namespace jun{
 			}
 		}
 		std::deque<Rect> boxes;
-		FloodFill::getConnComp(*pix_lines, &boxes, FloodFill::Connectivity::EIGHT);
+		FloodFill::getConnComp(*pix_lines, boxes, FloodFill::Connectivity::EIGHT);
 		while (!boxes.empty()){
 			Rect& curr = boxes.back();
 			PBLOBNBOX newBLOB = BLOBNBOX::newObj();
 			newBLOB->line_crossings = numTouchingIntersections(curr, pix_intersections);
 			if (horizontal_lines){ //flip xy
-				newBLOB->set_bounding_box(curr.y, curr.x, curr.height, curr.width);
+				newBLOB->set_bounding_box(Rect{ curr.y, curr.x, curr.height, curr.width });
 			}
 			else{
 				newBLOB->set_bounding_box(curr);

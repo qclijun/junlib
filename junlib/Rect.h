@@ -15,12 +15,12 @@ namespace jun{
 	};
 
 	template<>
-	struct MinDiff<float>{
+	struct MinDiff < float > {
 		static float value() { return std::numeric_limits<float>::epsilon(); }
 	};
-	
+
 	template<>
-	struct MinDiff<double>{
+	struct MinDiff < double > {
 		static double value() { return std::numeric_limits<double>::epsilon(); }
 	};
 
@@ -125,18 +125,26 @@ namespace jun{
 		}
 
 		// is valid??
-		operator bool() const{
+		//operator bool() const{
+		//	return height > 0 && width > 0;
+		//}
+
+		bool valid() const{
 			return height > 0 && width > 0;
 		}
+
 
 		template<typename T2>
 		operator BasicRect<T2>() const{
 			return{ x, y, width, height };
 		}
 
+		
+
+
 		bool overlap(BasicRect<T> rect) const{
 			return overlap_x(rect) > 0 && overlap_y(rect) > 0;
-	   }
+		}
 
 		BasicRect<T> overlap_rect(BasicRect<T> rect) const{
 			int xmin = std::max(x, rect.x);
@@ -206,38 +214,41 @@ namespace jun{
 	typedef BasicRect<float> RectF;
 	typedef BasicRect<double> RectD;
 
-}
+
+
+	template<typename T>
+	inline bool operator==(jun::BasicRect<T> left, jun::BasicRect<T> right){
+		return left.x == right.x&&left.y == right.y&&left.width == right.width&&left.height == right.height;
+	}
+
+	template<typename T>
+	inline bool operator!=(jun::BasicRect<T> left, jun::BasicRect<T> right){
+		return !(left == right);
+	}
+
+	//template<typename T>
+	//inline bool operator<(jun::BasicRect<T> left, jun::BasicRect<T> right){
+	//	return left.compare(right) < 0;
+	//}
+
+	template<typename T>
+	inline bool operator<(jun::BasicRect<T> left, jun::BasicRect<T> right){
+		if (left.x != right.x) return left.x < right.x;
+		if (left.xlast() != right.xlast()) return left.xlast() < right.xlast();
+		if (left.y != right.y) return left.y < right.y;
+		return left.ylast() < right.ylast();
+	}
 
 
 
 
-template<typename T>
-inline std::ostream& operator<<(std::ostream& out, jun::BasicRect<T> rect){
-	out << '{' << '(' << rect.x << ", " << rect.y << ") " << rect.width << 'x' << rect.height << '}';
-	return out;
-}
 
 
 
-template<typename T>
-inline bool operator==(jun::BasicRect<T> left, jun::BasicRect<T> right){
-	return left.x == right.x&&left.y == right.y&&left.width == right.width&&left.height == right.height;
-}
+	template<typename T>
+	inline std::ostream& operator<<(std::ostream& out, const jun::BasicRect<T>& rect){
+		out << '{' << '(' << rect.x << ", " << rect.y << ") " << rect.width << 'x' << rect.height << '}';
+		return out;
+	}
 
-template<typename T>
-inline bool operator!=(jun::BasicRect<T> left, jun::BasicRect<T> right){
-	return !(left == right);
-}
-
-//template<typename T>
-//inline bool operator<(jun::BasicRect<T> left, jun::BasicRect<T> right){
-//	return left.compare(right) < 0;
-//}
-
-template<typename T>
-inline bool operator<(jun::BasicRect<T> left, jun::BasicRect<T> right){
-	if (left.x != right.x) return left.x < right.x;
-	if (left.xlast() != right.xlast()) return left.xlast() < right.xlast();
-	if (left.y != right.y) return left.y < right.y;
-	return left.ylast() < right.ylast();
 }

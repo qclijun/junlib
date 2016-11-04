@@ -1,0 +1,12 @@
+[2016-08-07 09:17:44.169] [root] [info] info message
+[2016-08-07 09:18:36.149] [root] [info] info message
+[2016-08-07 09:19:00.791] [root] [info] info message
+[2016-08-07 09:20:10.230] [root] [info] info message
+[2016-08-07 09:20:10.230] [root] [debug] debug message
+[2016-08-07 09:20:10.231] [root] [debug] only SPDLOG_TRACE_ON 3 4
+[2016-08-07 09:29:18.789] [root] [info] info message
+[2016-08-07 09:29:18.790] [root] [debug] debug message
+[2016-08-07 09:29:18.791] [root] [debug] only SPDLOG_TRACE_ON 3 4
+[2016-08-07 12:56:42.330] [root] [info] info message
+[2016-08-07 12:56:42.330] [root] [debug] debug message
+[2016-08-07 12:56:42.330] [root] [debug] only SPDLOG_TRACE_ON 3 4

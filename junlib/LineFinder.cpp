@@ -7,6 +7,7 @@
 #include "MatrixUtil.h"
 #include "floodfill.h"
 #include "BoxCmp.h"
+#include "AlignedBlob.h"
 
 
 using std::max_element;
@@ -156,7 +157,7 @@ namespace jun{
 		}
 	}
 
-	int numTouchingIntersections(Rect box, jun::BinaryJMatrix* intersection_pix){
+	int LineFinder::numTouchingIntersections(Rect box, jun::BinaryJMatrix* intersection_pix){
 		if (intersection_pix == nullptr) return 0;
 		std::deque<Rect> result;
 		jun::FloodFill::getConnComp(*intersection_pix, box, result, FloodFill::Connectivity::EIGHT);
@@ -219,16 +220,162 @@ namespace jun{
 	}
 
 
+	// 左对齐
+	PBLOBNBOX LineFinder::findAlignedBlob(const AlignedBlobParams& p, std::set<PBLOBNBOX, BoxCmp_LT<BLOBNBOX>>& bset, PBLOBNBOX bbox){
+		if (bbox == nullptr) return nullptr;
+		int dx = p.vertical.x, dy = p.vertical.y;
+		int dir_y = dy < 0 ? -1 : 1;
+
+		int skew_tolerance = p.max_v_gap / jun::kMaxSkewFactor;
+		int x2 = (p.max_v_gap*dx + dy / 2) / dy;
+		Rect box = bbox->bounding_box();
+		int x_start = box.x;
+		x2 += x_start;
+		int xmin, xmax, ymin, ymax;
+		if (x2 < x_start){ //向左
+			xmin = x2; xmax = x_start;
+		}
+		else{
+			xmin = x_start; xmax = x2;
+		}
+		if (dy > 0){ //向下
+			ymin = box.ylast();
+			ymax = ymin + p.max_v_gap;
+		}
+		else{
+			ymax = box.y;
+			ymin = ymax - p.max_v_gap;
+		}
+		xmin -= skew_tolerance - p.min_gutter;
+		xmax += skew_tolerance + p.r_align_tolerance;
+
+		logger()->debug("Starting {} {}  search at {}-{},{}  dy={} search_size={}, gutter={}\n",
+			p.ragged ? "Ragged" : "Aligned", "Left", xmin, xmax, box.ylast(), dir_y, p.max_v_gap, p.min_gutter
+			);
+		auto begin_blob = std::make_shared<BLOBNBOX>();
+		begin_blob->set_bounding_box(Rect{ xmin, ymin, 1, 1 });
+		auto end_blob = std::make_shared<BLOBNBOX>();
+		end_blob->set_bounding_box(Rect{ xmax, ymax, 1, 1 });
+		auto beginIter = bset.lower_bound(begin_blob);
+		auto endIter = bset.upper_bound(end_blob);
+
+		PBLOBNBOX result = nullptr;
+		int min_dist = std::numeric_limits<int>::max();
+		for (auto iter = beginIter; iter != endIter; ++iter){
+			Rect nbox = (*iter)->bounding_box();
+			int n_y = (nbox.y + nbox.ylast()) / 2;
+			if ((dy > 0) && (n_y<ymin || n_y>ymax)) continue;
+			if (dy < 0 && (n_y < ymin || n_y > ymax)) continue;
+
+			int x_at_ny = x_start + (n_y - ymin)*dx / dy;
+			int n_x = nbox.x;
+			//aligned so keep it.
+			if (n_x <= x_at_ny + p.r_align_tolerance&&n_x >= x_at_ny - p.l_align_tolerance){
+				logger()->debug("aligned, seeking left, box={}\n", nbox);
+				TabType n_type = (*iter)->left_tab_type;
+				if (n_type != TabType::TT_NONE && (p.ragged || n_type != TabType::TT_MAYBE_RAGGED)){
+
+					int x_dist = n_x - x_at_ny;
+					int y_dist = n_y - ymin;
+					int new_dist = x_dist*x_dist + y_dist*y_dist;
+					if (new_dist < min_dist) {
+						min_dist = new_dist;
+						result = (*iter);
+					}
+
+				}
+			}
+		}
+		return result;
+
+	}
+
+	void  LineFinder::findAlignedBlobs(std::deque<PBLOBNBOX>& aligned_blobs,const AlignedBlobParams& p, std::set<PBLOBNBOX, BoxCmp_LT<BLOBNBOX>>& bset, PBLOBNBOX bbox){
+		const int dy = p.vertical.y;
+		auto tmp = bbox;
+		while ((tmp = findAlignedBlob(p, bset, tmp)) != nullptr){
+			TabType type = bbox->left_tab_type;
+			if (p.ragged || (type != TabType::TT_NONE && type != TabType::TT_MAYBE_RAGGED)){
+				logger()->debug("found aligned blob: {}\n", tmp->bounding_box());
+
+				if (dy > 0) aligned_blobs.push_back(bbox);
+				else aligned_blobs.push_front(bbox);
+			}		
+		}
+
+
+	}
+
+	void LineFinder::findVerticalAlignment(const AlignedBlobParams& p, std::set<PBLOBNBOX, BoxCmp_LT<BLOBNBOX>>& bset, PBLOBNBOX bbox){
+
+	}
+
+	namespace {
+		inline bool atLeast2LineCrossing(const std::deque<PBLOBNBOX>& que){
+			int total = 0;
+			for (auto iter = que.begin(); iter != que.end(); ++iter){
+				total += (*iter)->line_crossings;
+			}
+			return total >= 2;
+		}
+	}
+
 
 	void  LineFinder::findAndRemoveVLines(){
-		set<PBLOBNBOX,jun::BoxCmp_LT<BLOBNBOX>> bset;
+		set<PBLOBNBOX, jun::BoxCmp_LT<BLOBNBOX>> bset;
 		getLineBlobs(false, &pix_vline, &pix_intersections, bset);
 		if (bset.empty()) return;
 		int vertical_x = 0, vertical_y = 1;
+		deque<PBLOBNBOX> alignedblobs;
 		for (auto it = bset.begin(); it != bset.end(); ++it){
 			if ((*it)->left_tab_type == TabType::TT_MAYBE_ALIGNED){
-				Rect box = (*it)->bounding_box();
+				PBLOBNBOX bbox = *it;
+				Rect box = bbox->bounding_box();
+				logger()->info("Finding live vector starting at ({},{}) \n", box.x, box.y);
+				AlignedBlobParams align_params(vertical_x, vertical_y, box.width);
+				alignedblobs.clear();
+				alignedblobs.push_back(bbox);
+				findAlignedBlobs(alignedblobs, align_params, bset, bbox);
+				align_params.vertical *= -1; //反向
+				findAlignedBlobs(alignedblobs, align_params, bset, bbox);
+
+				auto box = alignedblobs.front()->bounding_box();
+				int start_x = box.x;
+				int start_y = box.y;
+				box = alignedblobs.back()->bounding_box();
+				int end_x = box.x;
+				int end_y = box.ylast();
+				bool at_least_2_crossings = atLeast2LineCrossing(alignedblobs);
+				if ((alignedblobs.size() >= align_params.min_points && end_y - start_y >= align_params.min_length
+					&& (align_params.ragged || end_y - start_y >= std::abs(end_x - start_x)*kMinTabGradient))
+					|| at_least_2_crossings){
+					int confirmed_pts = 0;
+					for (auto iter = alignedblobs.begin(); iter != alignedblobs.end(); ++iter){
+						auto bbox = *iter;
+						if (align_params.right_tab){
+							if (bbox->right_tab_type == align_params.confirmed_type)
+								++confirmed_pts;
+						}
+						else{
+							if (bbox->left_tab_type == align_params.confirmed_type)
+								++confirmed_pts;
+						}
+					}
+					if (!align_params.ragged || confirmed_pts * 2 < alignedblobs.size()){
+						for (auto iter = alignedblobs.begin(); iter != alignedblobs.end(); ++iter){
+							PBLOBNBOX bbox = *iter;
+							if (align_params.right_tab){
+								bbox->right_tab_type = align_params.confirmed_type;
+							}
+							else{
+								bbox->left_tab_type = align_params.confirmed_type;
+							}
+
+						}
+					}
+				}
 				
+
 
 			}
 		}
